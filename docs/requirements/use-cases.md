@@ -122,8 +122,12 @@ The note below is **not** the catalog. It records scope context only: a few Proj
 6. The course admin either confirms the creation (continues the normal flow) or chooses to modify the details (return to step 3).
 7. The system saves the new rubric and informs the course admin that this rubric has been created.
 8. Use case ends.
+   
 
 **Extensions:**
+- **4e. The reporting week or artifact type is invalid:**
+  - 4e1. The system explains which selection is invalid and sends no reminders.
+  - 4e2. The instructor corrects the selection and returns to step 3.
 - **4a. Input validation rule violation:**
   - 4a1. The system alerts the course admin that an input validation rule is violated and displays the nature and location of the error.
   - 4a2. The course admin corrects the mistake and returns to step 4 of the normal flow.
