@@ -886,6 +886,110 @@ The course admin shall be able to cancel the use case at any time prior to submi
 
 **Assumptions:**
 **Open Issues:**
+### **UC-SEC-remind-non-submitters: The instructor views missing submissions and sends reminders**
+
+**UC ID and Name:** UC-SEC-remind-non-submitters: View missing submissions and send reminders\
+**Created By:**\
+**Date Created:** October 2, 2026\
+**Primary Actor:** instructor\
+**Secondary Actors:** Email service\
+**Trigger:** The instructor indicates to view missing submissions for a course section and reporting week.\
+**Description:**
+
+the instructor needs to find students that have missing WAR reports or peer evaluations, then we need to remind the selected students. Automatically scheduled reminders are a separated use case but do also share the reminder policies cited here
+
+**Preconditions:**
+
+- PRE-1. The instructor is logged into the system with an active account.
+- PRE-2. The instructor is authorized to access the selected course section
+
+**Postconditions:**
+
+- POST-1. Missing submission statuses and reminder eligibility are shown for the selected course section and the reporting week.
+- POST-2. if sending is confirmed a reminder is submitted to our email service of each of the students with at least one selected artifact that is still eligible at the time of send
+- POST-3. The system will record each sent outcome, and will display sent, skipped and any results that are failed. Existing submissions will remain unchanged, and the successful sends are retained if other sends fail.
+
+**Main Success Scenario:**
+
+1. The instructor says they want to view the missing submissions.
+2. The system gives only course sections that are accessible under the BR-section-scoped-access and then asks for a reporting week and artifact types, these being weekly activity report, peer evaluations or both. We will use the defaulting reporting week as the previous calendar week.
+3. The instructor selects a desired course section, either a current or past reporting week, then an artifact type
+4. The system then validates the instructors selection, it will then determine each enrolled students submission status and their reminder eligibility according to our BR-reminder-submission-status and BR-reminder-eligibility.
+5. The system displays to the instructor the students that have missing submissions, showing each selected artifact separately then marking any artifact that cannot be remembered with its reason. But the students with no missing artifacts are omitted from the view.
+6. Then, the instructor picks at least one of the students artifacts and request a reminder for them
+7. The system will give the instructor a preview of the email, which will include the recipient, the course selection, the reporting week, and the missing artifacts that are needed.
+8. The instructor confirms the sending.
+9. Before each send by the system, it will check the instructors access again, account status, team assignment, submission status, restrictions, reminder allowance and current enrollment. The system will exclude any student and artifact combination that is not eligible anymore
+10. The system sends one email per recipient, listing only the recipients selected, still eligible missing artifacts, and records the outcome according the to the BR-reminder-frequency.
+11. THe system shows results, showing the reminders were accepted by the email services, and the selections that were skipped and the reasons why.
+12. The Use case ends.
+
+**Extensions:**
+
+- **2a or 9a. The requester lacks access to the selected course section or loses access before sending:**
+  - 2a1. The system refuses the request and does not revival that students records (BR-section-scoped-access, BR-role-based-access).
+  - 2a2. The send stops, Prior successful sends are recorded, no more reminders are sent.
+
+- **4a. A student is not assigned to a team:**
+  - 4a1. The system marks the missing artifact as “Unable to submit, no team assigned” then excludes them from reminder selection (BR-team-assignment-required, BR-reminder-eligibility).
+  - 4a2. Continue at step 5 for the other students that are in a team.
+
+- **4b. A peer evaluation's submission window is closed or has not opened:**
+  - 4b1. The system will mark a missing evaluation with the current window restriction, then disable its reminder (BR-evaluation-submission-window, BR-reminder-eligibility).
+  - 4b2. the eligibility of the WAR is evaluated separately, continue at step 5.
+
+- **4c. The reporting week is not an active week of the course section:**
+  - 4c1. The system marks the peer evaluation as “Not required, inactive reporting week” then excludes the evaluation from missing submission and the reminder counts (BR-active-weeks).
+  - 4c2. The system then evaluates the WAR according to the BR-reminder-eligibility, continuing at step 5.
+
+- **4d or 9b. A student submitted work and then deleted it:**
+  - 4d1. The system then determines the status from the currently retained submissions, including whether any WAR remains, according to the BR-reminder-submission-status.
+  - 4d2. If missing, the artifact becomes selectable only when the BR-reminder-eligibility and BR-reminder-frequency allow it. Continue at step 5 or 10 based on parameters.
+
+- **5a. No missing applicable submissions exist:**
+  - 5a1. The system reports that no missing submissions were found, for the selection and then offers to change the selection or end the current use case.
+
+- **6a or 9c. A reminder would exceed the allowed frequency, including repeated requests that morning:**
+  - 6a1. The system disables, or skips that student artifact selection and shows when it may next be reminded (BR-reminder-frequency).
+  - 6a2. Then, continue with other eligible selections. If there are none, send no email and display the currently skipped results.
+
+- **8a. The instructor cancels:**
+  - 8a1. The system sends no reminders and ends the use case.
+
+- **9d. A student submits after the list or preview was displayed:**
+  - 9d1. The system removes the submitted artifact from the email and marks it as skipped. If no selected eligible artifacts remain for that specific recipient, no email is sent to them.
+  - 9d2. Continue with the remaining recipients.
+
+- **9e. A student leaves the section, is deactivated, loses team assignment, or an applicable window closes:**
+  - 9e1. The system skips the affected selections according to our BR-reminder-eligibility and shows the reason why.
+  - 9e2. Continue with the remaining recipients.
+
+- **10a. The email service rejects a recipient's address or returns a definite send failure:**
+  - 10a1. The system logs the failure, records it as failed and does not consume the successful-send allowance, and continues with other recipients.
+  - 10a2. The instructor views the recipient's failure at step 11.
+
+- **10b. The email service times out and acceptance cannot be determined:**
+  - 10b1. The system records an unknown outcome, reports that delivery acceptance is unconfirmed, and will not automatically retry that attempt.
+  - 10b2. The system prevents another attempt for the affected combinations for 24 hours, unless definite rejection is established by (BR-reminder-frequency). Continue with other recipients if/when possible.
+
+**Priority:** High\
+**Frequency of Use:** As needed by instructors
+
+**Business Rules:** BR-section-scoped-access, BR-role-based-access, BR-student-lifecycle, BR-team-assignment-required, BR-active-weeks, BR-evaluation-submission-window, BR-evaluation-editable-until-close, BR-reminder-submission-status, BR-reminder-eligibility, BR-reminder-frequency
+
+**Associated Information:**
+
+- List fields: student name and their identifier, team status, reporting-week date range, separate WAR and peer evaluation statuses, reason each missing artifact cannot be reminded, and the next allowed reminder time if there is one.
+- Reminder content identifies the course section, reporting-week date range, and only the recipient's selected eligible missing artifacts. It provides a route to the corresponding submission workflow. It does not expose other recipients information.
+- A successful send tells us that the email service accepted the message, but does not guarantee the recipient got the message in the inbox
+- Submission records and the missing submission list are student records handled under the CO-ferpa. Student callers cannot access this instructor list or send reminders. Course admins hold instructor capabilities under BR-role-based-access, subject to BR-section-scoped-access.
+- The system uses the same calendar-week boundaries and time basis as the existing WAR and peer evaluation workflows; displaying a date range must not silently change which stored reporting week is queried.
+- If interrupted after some sends but others are stopped, the system preserves known outcomes and reports partial completion. Already accepted sends are not to be rolled back or automatically repeated.
+- The choice of UI layout, sorting, internal query structure, and email wording is left to implementation provided the specified content.
+
+**Related Use Cases:** UC-WAR-manage-activities, UC-EVA-submit-evaluation\
+**Assumptions:** The existing reporting workflows provide a consistent reporting week parameters and identity. .\
+**Open Issues:** The existing WAR use case refers to selecting an active week, while BR-active-weeks permits WAR regardless of active weeks. This reminder feature follows BR-active-weeks and does not impose a new WAR active-week gate.
 
 ## **Team**
 
