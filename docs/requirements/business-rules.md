@@ -112,3 +112,13 @@ The artifact types named here are the canonical `RequirementArtifactType` set (g
 # **Comments and Feedback**
 
 - **BR-comment-access:** A comment may be created and resolved by any student on the team that owns the commented requirement document, document section, or requirement artifact, and by the instructor assigned to the course section. Because comments record discussion and feedback rather than authored requirement content, commenting and resolving are permitted regardless of whether the document is locked for review; the review lock (BR-review-lock) restricts edits to requirement content only, not commenting.
+- 
+# **Submission Reminders**
+
+- **BR-reminder-submission-status:**  Check each student, the week, and submission type Separately. One saved WAR activity counts, a saved and validated peer evaluation counts as well. Deleted or unsaved work does not. 
+
+- **BR-reminder-eligibility:** Manual and scheduled reminders are sent only to currently enrolled, active students with teams who are missing work they can still submit. Peer evaluations follow BR active weeks and BR evaluation submission window. WAR reminders may cover current or past reporting weeks regardless of active weeks, and the peer evaluation submission window does not apply to them. The system checks eligibility again immediately before sending.
+
+- **BR-reminder-frequency:** Only one reminder accepted by the email service is allowed per course section, student, submission type, and reporting week within a rolling 24 hour period. Manual and scheduled reminders share this limit across all instructors, and simultaneous requests must not bypass it. An email covering both WAR and peer evaluation uses the allowance for both types. A definite failed send does not use the allowance. A send with unknown acceptance blocks another attempt for 24 hours from that attempt unless definite rejection is established, and is not automatically retried. Deleting or submitting work does not reset the limit.
+
+
