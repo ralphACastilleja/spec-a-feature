@@ -111,4 +111,13 @@ The artifact types named here are the canonical `RequirementArtifactType` set (g
 
 # **Comments and Feedback**
 
+# **Submission Reminders**
+
+- **BR-reminder-submission-status:**  Check each student, the week, and submission type Separately. One saved WAR activity counts, a saved and validated peer evaluation counts as well. Deleted or unsaved work does not. 
+
+- **BR-reminder-eligibility:** Remind only the enrolled and active students with teams who can still submit. Apply the active week and sss
+
+- **BR-reminder-frequency:** One accepted reminder per student per reporting week..
+
+
 - **BR-comment-access:** A comment may be created and resolved by any student on the team that owns the commented requirement document, document section, or requirement artifact, and by the instructor assigned to the course section. Because comments record discussion and feedback rather than authored requirement content, commenting and resolving are permitted regardless of whether the document is locked for review; the review lock (BR-review-lock) restricts edits to requirement content only, not commenting.
